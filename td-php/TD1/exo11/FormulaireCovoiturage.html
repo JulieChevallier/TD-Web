@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Covoiturage</title>
+</head>
+<body>
+<form method="get" action="Covoiturage.php">
+    <fieldset>
+        <legend>Créer un covoiturage :</legend>
+        <p>
+            <label for="identifiant_id">Identifiant</label> :
+            <input type="text" placeholder="4521" name="identifiant" id="identifiant_id" required/>
+            <br><label for="depart_id">Départ</label> :
+            <input type="text" placeholder="Paris" name="depart" id="depart_id" required/>
+            <br><label for="arrivee_id">Arrivée</label> :
+            <input type="text" placeholder="Lille" name="arrivee" id="arrivee_id" required/>
+            <br><label for="date_id">Date</label> :
+            <input type="text" placeholder="06-12-23" name="date" id="date_id" required/>
+            <br><label for="nbPlaces_id">Nombre de places</label> :
+            <input type="number" placeholder="2" name="nbplaces" id="nbplaces_id" required/>
+            <br><label for="prix_id">Prix</label> :
+            <input type="number" placeholder="10" name="prix" id="prix_id" required/>
+            <br><label for="conduc_id">Conducteur</label> :
+            <input type="text" placeholder="Michel" name="conduc" id="conduc_id" required/>
+        </p>
+        <p>
+            <input type="submit" value="Envoyer" />
+        </p>
+    </fieldset>
+</form>
+</body>
+</html>
