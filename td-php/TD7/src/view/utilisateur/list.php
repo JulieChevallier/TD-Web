@@ -1,38 +1,11 @@
-
 <?php
-echo "</br>";
-echo "<b>Lire utilisateur :</b>";
-/** @var ModelUtilisateur $utilisateurs */
+echo '<p><a href="./frontController.php?controller=utilisateur&action=create">Créer un utilisateur</a></p><div class="container">';
 foreach ($utilisateurs as $utilisateur) {
-    $loginHTML = htmlspecialchars($utilisateur->getLogin());
-    $loginURL = rawurlencode($utilisateur->getLogin());
-    echo "<p>
-    Login Utilisateur
-    <a href=\"./frontController.php?controller=utilisateur&action=read&controller=utilisateur&login={$loginURL}\"> {$loginHTML} </a>
-    </p>";
+    $utilHTML = htmlspecialchars($utilisateur->getLogin());
+    $utilURL = rawurlencode($utilisateur->getLogin());
+    echo '<div class="box"><span> Utilisateur :</span> ' . '<a href="./frontController.php?controller=utilisateur&action=read&login=' .
+        $utilURL . '">' . $utilHTML . '</a>' . '<div class="edit"><a href="./frontController.php?controller=utilisateur&action=delete&login=' .
+        $utilURL . '">' . '<span class="material-symbols-outlined delete">delete</span>' . '</a>' . '<a href="./frontController.php?controller=utilisateur&action=update&login=' .
+        $utilURL . '">' . '<span class="material-symbols-outlined modify">edit</span>' . '</a></div></div>';
 }
-
-echo "</br>";
-echo "<b>Supprimer utilisateur :</b>";
-foreach ($utilisateurs as $utilisateur) {
-    $loginHTML = htmlspecialchars($utilisateur->getLogin());
-    $loginURL = rawurlencode($utilisateur->getLogin());
-    echo "<p>
-    Login Utilisateur
-    <a href=\"./frontController.php?controller=utilisateur&action=delete&login={$loginURL}\"> {$loginHTML} </a>
-    </p>";
-}
-
-
-echo "</br>";
-echo "<b>Modifier utilisateur :</b>";
-foreach ($utilisateurs as $utilisateur) {
-    $loginHTML = htmlspecialchars($utilisateur->getLogin());
-    $loginURL = rawurlencode($utilisateur->getLogin());
-    echo "<p>
-    Login Utilisateur
-    <a href=\"./frontController.php?controller=utilisateur&action=update&login={$loginURL}\"> {$loginHTML} </a>
-    </p>";
-}
-?>
-
+echo '</div>';

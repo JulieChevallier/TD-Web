@@ -30,8 +30,8 @@ class DatabaseConnection
 
     private static function getInstance(): DatabaseConnection{
         if (is_null(static::$instance))
-            DatabaseConnection::$instance = new DatabaseConnection();
-        return DatabaseConnection::$instance;
+            static::$instance = new DatabaseConnection();
+        return static::$instance;
     }
 
 

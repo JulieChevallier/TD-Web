@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Covoiturage\Controller;
-use App\Covoiturage\Model\DataObject\Trajet;
+use App\Covoiturage\Lib\MessageFlash;
 use App\Covoiturage\Model\Repository\TrajetRepository;
+use App\Covoiturage\Model\DataObject\Trajet;
 
-class ControllerTrajet extends AbstractController{
-    public static function readAll() : void {
+class ControllerTrajet extends AbstractController {
+
+    public static function readAll(): void {
         $trajets = (new TrajetRepository())->selectAll(); //appel au modèle pour gerer la BD
         self::afficheVue('view.php',
             ["trajets" => $trajets,"pagetitle" => "Liste des trajets", "cheminVueBody" => "trajet/list.php"]);
     }
 
-    public static function read() : void {
+    public static function read(): void {
         $trajet = (new TrajetRepository())->select($_GET['id']);
         if ($trajet) {
             self::afficheVue('view.php',
@@ -27,12 +29,13 @@ class ControllerTrajet extends AbstractController{
             ["pagetitle" => "Creation", "cheminVueBody" => "trajet/create.php"]);
     }
 
+
     public static function created(): void {
         $trajet = new Trajet(NULL,$_POST['depart'], $_POST['arrivee'], $_POST['date'], $_POST['places'], $_POST['prix'], $_POST['login']);
         (new TrajetRepository())->sauvegarder($trajet);
         $trajets = (new TrajetRepository())->selectAll();
         self::afficheVue('view.php',
-            ["trajets" => $trajets,"pagetitle" => "Crée", "cheminVueBody" => "trajet/created.php"]);
+            ["trajets" => $trajets,"pagetitle" => "Crée", "cheminVueBody" => "trajet/create.php"]);
     }
 
     public static function update(): void {
@@ -46,7 +49,7 @@ class ControllerTrajet extends AbstractController{
         (new TrajetRepository())->update($trajet);
         $trajets = (new TrajetRepository())->selectAll();
         self::afficheVue('view.php',
-            ["id" => $trajet->getId(),"trajets" => $trajets,"pagetitle" => "Updated", "cheminVueBody" => "trajet/updated.php"]);
+            ["id" => $trajet->getId(),"trajets" => $trajets,"pagetitle" => "Updated", "cheminVueBody" => "trajet/update.php"]);
     }
 
     public static function delete(): void {
@@ -54,11 +57,6 @@ class ControllerTrajet extends AbstractController{
         (new TrajetRepository())->supprimer($id);
         $trajets = (new TrajetRepository())->selectAll();
         self::afficheVue('view.php',
-            ["trajets" => $trajets,"id" => $id, "pagetitle" => "Suppression", "cheminVueBody" => "trajet/deleted.php"]);
-    }
-
-    public static function error(string $errorMessage = "") {
-        self::afficheVue("view.php",
-            ["errorMessage" => $errorMessage,"pagetitle" => "Erreur", "cheminVueBody" => "trajet/erreur.php"]);
+            ["trajets" => $trajets,"id" => $id, "pagetitle" => "Suppression", "cheminVueBody" => "trajet/delete.php"]);
     }
 }

@@ -1,15 +1,14 @@
 <?php
 
-//require_once __DIR__ .('/../Model/Voiture.php');
-
 namespace App\Covoiturage\Controller;
-use App\Covoiturage\Model\Repository\AbstractRepository;
-use App\Covoiturage\Model\Repository\VoitureRepository as VoitureRepository;
-use App\Covoiturage\Model\DataObject\Voiture as Voiture;
 
+use App\Covoiturage\Lib\MessageFlash;
+use App\Covoiturage\Model\Repository\AbstractRepository;
+use App\Covoiturage\Model\Repository\VoitureRepository;
+use App\Covoiturage\Model\DataObject\Voiture;
 
 class ControllerVoiture extends AbstractController {
-
+    // Déclaration de type de retour void : la fonction ne retourne pas de valeur
     public static function readAll(): void {
         $voitures = (new VoitureRepository())->selectAll(); //appel au modèle pour gerer la BD
         self::afficheVue('view.php',
@@ -22,8 +21,7 @@ class ControllerVoiture extends AbstractController {
             self::afficheVue('view.php',
                 ["voiture" => $voiture, "pagetitle" => "Voiture", "cheminVueBody" => "voiture/detail.php"]);
         } else {
-            self::afficheVue('view.php',
-                ["pagetitle" => "Erreur", "cheminVueBody" => "voiture/erreur.php"]);
+            (new MessageFlash())->ajouter("danger","La voiture n'existe pas");
         }
     }
 
@@ -37,7 +35,15 @@ class ControllerVoiture extends AbstractController {
         (new VoitureRepository())->sauvegarder($voiture);
         $voitures = (new VoitureRepository())->selectAll();
         self::afficheVue('view.php',
-            ["voitures" => $voitures,"pagetitle" => "Crée", "cheminVueBody" => "voiture/created.php"]);
+            ["voitures" => $voitures,"pagetitle" => "Crée", "cheminVueBody" => "voiture/create.php"]);
+    }
+
+    public static function delete(): void {
+        $immatriculation = $_GET['immat'];
+        (new VoitureRepository())->supprimer($immatriculation);
+        $voitures = (new VoitureRepository())->selectAll();
+        self::afficheVue('view.php',
+            ["voitures" => $voitures,"immatriculation" => $immatriculation, "pagetitle" => "Suppression", "cheminVueBody" => "voiture/delete.php"]);
     }
 
     public static function update(): void {
@@ -51,21 +57,11 @@ class ControllerVoiture extends AbstractController {
         (new VoitureRepository())->update($voiture);
         $voitures = (new VoitureRepository())->selectAll();
         self::afficheVue('view.php',
-            ["immatriculation" => $voiture->getImmatriculation(),"voitures" => $voitures,"pagetitle" => "Updated", "cheminVueBody" => "voiture/updated.php"]);
-    }
-
-    public static function delete(): void {
-        $immatriculation = $_GET['immat'];
-        (new VoitureRepository())->supprimer($immatriculation);
-        $voitures = (new VoitureRepository())->selectAll();
-        self::afficheVue('view.php',
-            ["voitures" => $voitures,"immatriculation" => $immatriculation, "pagetitle" => "Suppression", "cheminVueBody" => "voiture/deleted.php"]);
+            ["immatriculation" => $voiture->getImmatriculation(),"voitures" => $voitures,"pagetitle" => "Updated", "cheminVueBody" => "voiture/update.php"]);
     }
 
     public static function error(string $errorMessage = "") {
         self::afficheVue("view.php",
-            ["errorMessage" => $errorMessage,"pagetitle" => "Erreur", "cheminVueBody" => "voiture/erreur.php"]);
+            ["errorMessage" => $errorMessage,"pagetitle" => "Erreur", "cheminVueBody" => "voiture/error.php"]);
     }
-
 }
-?>

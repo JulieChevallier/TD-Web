@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Covoiturage\Controller;
-use App\Covoiturage\Model\Repository\AbstractRepository;
-use App\Covoiturage\Model\Repository\UtilisateurRepository as UtilisateurRepository;
-use App\Covoiturage\Model\DataObject\Utilisateur as Utilisateur;
+use App\Covoiturage\Lib\MessageFlash;
+use App\Covoiturage\Model\Repository\UtilisateurRepository;
+use App\Covoiturage\Model\DataObject\Utilisateur;
+use App\Covoiturage\Model\HTTP\Cookie;
 
-class ControllerUtilisateur extends AbstractController{
+class ControllerUtilisateur extends AbstractController {
+
+    // Déclaration de type de retour void : la fonction ne retourne pas de valeur
     public static function readAll(): void {
         $utilisateurs = (new UtilisateurRepository())->selectAll(); //appel au modèle pour gerer la BD
         self::afficheVue('view.php',
@@ -19,7 +22,7 @@ class ControllerUtilisateur extends AbstractController{
                 ["utilisateur" => $utilisateur, "pagetitle" => "Utilisateur", "cheminVueBody" => "utilisateur/detail.php"]);
         } else {
             self::afficheVue('view.php',
-                ["pagetitle" => "Erreur", "cheminVueBody" => "voiture/erreur.php"]);
+                ["pagetitle" => "Erreur", "cheminVueBody" => "voiture/error.php"]);
         }
     }
 
@@ -31,9 +34,8 @@ class ControllerUtilisateur extends AbstractController{
     public static function created(): void {
         $utilisateur = new Utilisateur($_POST['login'], $_POST['nom'], $_POST['prenom']);
         (new UtilisateurRepository())->sauvegarder($utilisateur);
-        $utilisateurs = (new UtilisateurRepository())->selectAll();
-        self::afficheVue('view.php',
-            ["utilisateurs" => $utilisateurs,"pagetitle" => "Crée", "cheminVueBody" => "utilisateur/created.php"]);
+        (new MessageFlash())->ajouter("success","L'utilisateur a été créé");
+        self::redirection("?controller=utilisateur&action=readAll");
     }
 
     public static function update(): void {
@@ -45,9 +47,8 @@ class ControllerUtilisateur extends AbstractController{
     public static function updated(): void {
         $utilisateur = new Utilisateur($_GET['login'], $_GET['nom'], $_GET['prenom']);
         (new UtilisateurRepository())->update($utilisateur);
-        $utilisateurs = (new UtilisateurRepository())->selectAll();
-        self::afficheVue('view.php',
-            ["login" => $utilisateur->getLogin(),"utilisateurs" => $utilisateurs,"pagetitle" => "Updated", "cheminVueBody" => "utilisateur/updated.php"]);
+        (new MessageFlash())->ajouter("success","L'utilisateur a été mis à jour");
+        self::redirection("?controller=utilisateur&action=readAll");
     }
 
     public static function delete(): void {
@@ -55,21 +56,12 @@ class ControllerUtilisateur extends AbstractController{
         (new UtilisateurRepository())->supprimer($login);
         $utilisateurs = (new UtilisateurRepository())->selectAll();
         self::afficheVue('view.php',
-            ["utilisateurs" => $utilisateurs,"login" => $login, "pagetitle" => "Suppression", "cheminVueBody" => "utilisateur/deleted.php"]);
+            ["utilisateurs" => $utilisateurs,"login" => $login, "pagetitle" => "Suppression", "cheminVueBody" => "utilisateur/delete.php"]);
     }
 
     public static function error(string $errorMessage = "") {
         self::afficheVue("view.php",
-            ["errorMessage" => $errorMessage,"pagetitle" => "Erreur", "cheminVueBody" => "utilisateur/erreur.php"]);
+            ["errorMessage" => $errorMessage,"pagetitle" => "Erreur", "cheminVueBody" => "utilisateur/error.php"]);
     }
 
-    public static function deposerCookie() : void {
-        setcookie("TestCookie", "OK", time() + 3600);
-        self::readAll();
-        self::lireCookie();
-    }
-
-    public static function lireCookie() : void {
-        echo $_COOKIE["TestCookie"];
-    }
 }
